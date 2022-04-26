@@ -1,0 +1,17 @@
+body {
+  background-color: #1E1E2E;
+  width: device-width;
+  border: 15px solid #D9E0EE;
+  padding: 50px;
+  margin: 20px;
+}
+
+p {
+	font-family: "Cantarell";
+	color: #D9E0EE;
+}
+
+h1 {
+	font-family: "Cantarell";
+	color: #D9E0EE;
+}
