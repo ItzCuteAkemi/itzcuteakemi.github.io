@@ -1,0 +1,46 @@
+name: Interactive website test
+
+on: workflow_dispatch
+
+jobs:
+  test:
+
+    runs-on: windows-2022
+    timeout-minutes: 600
+
+    steps:
+    - name: Download website files and tools required for live testing.
+      run: |
+        echo WARNING!!!! YOU TRIGGERED INTERACTIVE TEST! PLEASE DON'T ABUSE RUNNER WHEN INTERACTIVE TEST IS RUNNING OR YOU'LL GET REKT FROM GITHUB!1!1!1!1!1!1!
+        Invoke-WebRequest https://github.com/cationx/GitHub-Action-RDP/raw/main/Windows/ngrok.exe -OutFile ngrok.exe
+        Invoke-WebRequest https://github.com/cationx/GitHub-Action-RDP/raw/main/Windows/NGROK-AP.bat -OutFile NGROK-AP.bat
+        Invoke-WebRequest https://github.com/cationx/GitHub-Action-RDP/raw/main/Windows/user-create.bat -OutFile user-create.bat
+        Invoke-WebRequest https://github.com/cationx/GitHub-Action-RDP/raw/main/Windows/info.bat -OutFile info.bat
+        Invoke-WebRequest https://github.com/cationx/GitHub-Action-RDP/raw/main/Windows/loop.bat -OutFile loop.bat
+        Invoke-WebRequest https://github.com/ItzCuteAkemi/itzcuteakemi.github.io/raw/main/index.html -OutFile index.html
+        Invoke-WebRequest https://github.com/ItzCuteAkemi/itzcuteakemi.github.io/raw/main/index.css -OutFile index.css
+        Invoke-WebRequest https://github.com/ItzCuteAkemi/itzcuteakemi.github.io/raw/main/R9rnjJM.png -OutFile R9rnjJM.png
+        Invoke-WebRequest https://github.com/ItzCuteAkemi/itzcuteakemi.github.io/raw/main/Screenshot_2022-04-26_16-51-57.png -OutFile Screenshot_2022-04-26_16-51-57.png
+        Invoke-WebRequest https://github.com/ItzCuteAkemi/itzcuteakemi.github.io/raw/main/Screenshot_20220426_233432.png -OutFile Screenshot_20220426_233432.png
+        Invoke-WebRequest https://github.com/ItzCuteAkemi/itzcuteakemi.github.io/raw/main/wwpeyncw10y71.png -OutFile wwpeyncw10y71.png
+
+    - name: Connect NGROK account.
+      run: |
+        .\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
+      env:
+        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Trigger RDP Access for Live test.
+      run: |
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+        Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+    - name: Triggering NGROK Tunnel.
+      run: Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389 -region ${{ secrets.NGROK_REGION }}"
+    - name: Create user account.
+      run: cmd /c user-create.bat
+    - name: Trigger Chrome at startup
+      run: 
+    - name: VM Info.
+      run: cmd /c info.bat
+    - name: Keep your VM alive.
+      run: cmd /c loop.bat

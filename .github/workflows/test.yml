@@ -1,0 +1,30 @@
+name: Automated website Test
+
+on: workflow_dispatch
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 600
+
+    steps:
+    - name: Download every website files from repo.
+      run: |
+        sudo apt install -yq git
+        git clone https://github.com/ItzCuteAkemi/itzcuteakemi.github.io $PWD/website
+
+    - name: Install Puppeteer.
+      run: |
+        bash -c "cd website; sudo apt -yq install nodejs; npm i puppeteer puppeteer-screen-recorder"
+    - name: Triggering the test.
+      run: |
+        bash -c "cd website; node index"
+    - name: Create Tunnel.
+      run: Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389 -region ${{ secrets.NGROK_REGION }}"
+    - name: Create user account.
+      run: cmd /c user-create.bat
+    - name: VM Info.
+      run: cmd /c info.bat
+    - name: Keep your VM alive.
+      run: cmd /c loop.bat
