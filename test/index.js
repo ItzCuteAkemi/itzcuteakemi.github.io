@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer-extra');
+const { PuppeteerScreenRecorder } = require("puppeteer-screen-recorder");
 
 (async () => {
     console.log('Starting puppeteer')
@@ -11,8 +12,11 @@ const puppeteer = require('puppeteer-extra');
         width: 1280,
         height: 720
     });
+    const recorder = new PuppeteerScreenRecorder(page);
+    await recorder.start("out.mp4");
     await page.goto('https://akemi.is-a.dev/itzcuteakemi.github.io/index.html');
     await page.waitForTimeout(60000);
+    await recorder.stop();
     await browser.close();
 })();
 
