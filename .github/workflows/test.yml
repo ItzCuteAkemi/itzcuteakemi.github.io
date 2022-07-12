@@ -20,11 +20,13 @@ jobs:
     - name: Triggering the test.
       run: |
         bash -c "cd website; node index"
-    - name: Create Tunnel.
-      run: Start-Process -FilePath ".\ngrok.exe" -ArgumentList "tcp 3389 -region ${{ secrets.NGROK_REGION }}"
-    - name: Create user account.
-      run: cmd /c user-create.bat
-    - name: VM Info.
-      run: cmd /c info.bat
-    - name: Keep your VM alive.
-      run: cmd /c loop.bat
+    - name: Test complete
+      run: |
+        echo Your test has been completed successfully. Download the test result from Webserver to see the result
+        wget "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz"
+        tar -xvf ngrok-v3-stable-linux-amd64.tgz
+        sudo cp ngrok /usr/bin
+        sudo apt install apache2
+        sudo systemctl start apache2
+        sudo cp -r $PWD /var/www/html
+        
